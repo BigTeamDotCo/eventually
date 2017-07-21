@@ -1,0 +1,15 @@
+{
+  "name": "node-aot",
+  "version": "0.0.0-alpha.1",
+  "description": "Node action over time lib.",
+  "main": "index.js",
+  "scripts": {
+    "test": "test.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "memory-cache": "^0.2.0",
+    "mongoose": "^4.11.3"
+  }
+}
