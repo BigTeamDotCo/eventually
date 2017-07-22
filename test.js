@@ -1,4 +1,5 @@
-const ActionsOverTime = require('./index');
+const ActionsOverTime = require('./index').ActionsOverTime;
 const config = require('./test.config.js').config;
 
-ActionsOverTime.createActionOverTimeEmitter(config);
+const actionsOverTime = ActionsOverTime.createActionOverTimeEmitter(config);
+

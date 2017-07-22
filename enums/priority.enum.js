@@ -1,7 +1,7 @@
-const PRIORITY = {
-  Low: 'Low',
-  Medium: 'Medium',
-  High: 'High'
-};
+const PRIORITY = [
+  'Low',
+  'Medium',
+  'High'
+];
 
 exports.PRIORITY = PRIORITY;

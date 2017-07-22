@@ -23,15 +23,20 @@ class ActionsOverTime {
     this.createFork();
   }
 
-  addSubscriber() {
-    console.log(AOTStore)
-  }
-
   createFork() {
-    childProcess.fork(process.cwd() + 'aot', this.options);
+    this.aotApp = childProcess.fork(process.cwd() + '/aot', [], { env: this.options });
+    this.aotApp.on('message', function(data) {
+      console.log(data);
+    })
   }
 
-  createAction() {}
+  addSubscriber() {
+    this.aotApp.send({ action: 'ADDED_SUBSCRIBER' });
+  }
+
+  createAction(actionName, date) {
+    this.aotApp.send({ action: 'ADD_ACTION', actionData: { name: actionName, date: date }});
+  }
 }
 
 exports.ActionsOverTime = ActionsOverTime;

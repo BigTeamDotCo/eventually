@@ -23,8 +23,20 @@ class ConnectorMongoose {
     this.History = mongoose.model('History');
   }
 
-  createNewAction() {
+  getCurrentAction(cb) {
+    this.Action
+      .find({})
+      .sort({ date: 'asc' })
+      .exec(cb);
+  }
 
+  createNewAction(actionData) {
+    (new this.Action({
+      date: actionData.date,
+      action: actionData.name,
+      priority: 'Medium'
+    })).save(function (err, action) {
+    });
   }
 }
 
