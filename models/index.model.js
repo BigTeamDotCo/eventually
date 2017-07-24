@@ -25,7 +25,7 @@ class ConnectorMongoose {
 
   getCurrentAction(cb) {
     this.Action
-      .find({})
+      .findOne({})
       .sort({ date: 'asc' })
       .exec(cb);
   }

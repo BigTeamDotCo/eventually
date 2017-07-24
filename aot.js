@@ -11,10 +11,11 @@ const memoryCache = require('memory-cache');
     dbName: process.env.dbName
   });
   let currentAction;
+  let currentActionDate;
 
   persistingAction.getCurrentAction(function(err, action) {
-    console.log(action);
     currentAction = action;
+    currentActionDate = new Date(currentAction.date).getTime();
   });
 
   function subscriberAdded() {
@@ -26,11 +27,13 @@ const memoryCache = require('memory-cache');
   function createLoop() {
     return setInterval(function() {
       checkCachedAction();
-    }, 1000);
+    }, process.env.interval ? process.env.interval : 1000);
   }
 
   function checkCachedAction() {
-
+    if (Date.now() > currentActionDate) {
+      process.send(currentAction.action)
+    }
   }
 
   function createAction(actionData) {
