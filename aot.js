@@ -18,6 +18,7 @@ const memoryCache = require('memory-cache');
     persistingAction.getCurrentAction(availableActions, function(err, action) {
       currentAction = action;
       if (currentAction) {
+        console.log(action.date)
         currentActionDate = new Date(currentAction.date).getTime();
       }
     });

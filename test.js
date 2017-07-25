@@ -12,6 +12,7 @@ actionsOverTime.addAction('testing', date);
 actionsOverTime.addAction('testing', date2);
 
 actionsOverTime.addAction('test', new Date());
+actionsOverTime.addAction('test', new Date());
 actionsOverTime.addAction('testing', new Date());
 
 actionsOverTime.addSubscriber('testing', (complete, reject) => {
@@ -19,7 +20,8 @@ actionsOverTime.addSubscriber('testing', (complete, reject) => {
 });
 
 setTimeout(() => {
+  actionsOverTime.addAction('test', new Date());
   actionsOverTime.addSubscriber('test', (complete, reject) => {
     complete();
   });
-}, 30);
+}, 5000);

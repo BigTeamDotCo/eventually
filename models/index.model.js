@@ -46,6 +46,7 @@ class ConnectorMongoose {
     this.Action.remove({
       _id: actionId
     }, function (err, action) {
+      console.log('delete ' + new Date());
       cb(err);
     });
   }
