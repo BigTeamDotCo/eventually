@@ -23,19 +23,30 @@ class ConnectorMongoose {
     this.History = mongoose.model('History');
   }
 
-  getCurrentAction(cb) {
+  getCurrentAction(availableActions, cb) {
     this.Action
-      .findOne({})
+      .find({
+        action: { $in: availableActions}
+      })
       .sort({ date: 'asc' })
-      .exec(cb);
+      .exec((err, actions) => {
+        cb(err, actions[0])
+      });
   }
 
-  createNewAction(actionData) {
+  createNewAction(actionData, cb) {
     (new this.Action({
       date: actionData.date,
-      action: actionData.name,
+      action: actionData.action,
       priority: 'Medium'
-    })).save(function (err, action) {
+    })).save(cb);
+  }
+
+  removeAction(actionId, cb) {
+    this.Action.remove({
+      _id: actionId
+    }, function (err, action) {
+      cb(err);
     });
   }
 }

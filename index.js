@@ -7,35 +7,61 @@ class ActionsOverTime {
       throw new Error('ActionsOverTime: can\'t create an emitter with no key.');
     }
     if (AOTStore[options.key]) {
-      return AOTStore[options.key];
+      return AOTStore[options.key].actions;
     } else {
       const self = new ActionsOverTime(options);
-      AOTStore[options.key] = self;
-      return {
+      AOTStore[options.key] = { actions: {
         addAction: self.createAction.bind(self),
         addSubscriber: self.addSubscriber.bind(self)
-      }
+      }};
+      return AOTStore[options.key].actions;
     }
   }
 
   constructor(options) {
     this.options = options;
-    this.createFork();
+    this.createLoopFork();
   }
 
-  createFork() {
+  completeActionCallback(callbackCount, actionEvent) {
+    this.aotApp.send({ message: 'COMPLETE_ACTION' });
+  }
+
+  rejectActionCallback(reason) {
+    if (reason.constructor.name === 'Error') {
+      throw reason;
+    } else {
+      throw new Error(reason);
+    }
+  }
+
+  handleResponse(actionEvent) {
+    // Todo - support multiple callbacks
+    AOTStore[this.options.key]['subscribers'][actionEvent.action][0](
+      this.completeActionCallback.bind(this, actionEvent),
+      this.rejectActionCallback.bind(this));
+  }
+
+  createLoopFork() {
     this.aotApp = childProcess.fork(process.cwd() + '/aot', [], { env: this.options });
-    this.aotApp.on('message', function(data) {
-      console.log(data);
-    })
+    this.aotApp.on('message', this.handleResponse.bind(this));
   }
 
-  addSubscriber() {
-    this.aotApp.send({ action: 'ADDED_SUBSCRIBER' });
+  addSubscriber(actionName, callback) {
+    if (!AOTStore[this.options.key]['subscribers']) {
+      AOTStore[this.options.key]['subscribers'] = {};
+    }
+    if (AOTStore[this.options.key]['subscribers'][actionName]) {
+      console.warn('node-aot currently only support single subscribers');
+      AOTStore[this.options.key]['subscribers'][actionName].push(callback);
+    } else {
+      AOTStore[this.options.key]['subscribers'][actionName] = [callback];
+    }
+    this.aotApp.send({ message: 'ADDED_SUBSCRIBER', action: actionName });
   }
 
   createAction(actionName, date) {
-    this.aotApp.send({ action: 'ADD_ACTION', actionData: { name: actionName, date: date }});
+    this.aotApp.send({ message: 'ADD_ACTION', actionData: { action: actionName, date: date }});
   }
 }
 

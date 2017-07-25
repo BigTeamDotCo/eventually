@@ -12,41 +12,66 @@ const memoryCache = require('memory-cache');
   });
   let currentAction;
   let currentActionDate;
+  let availableActions = [];
 
-  persistingAction.getCurrentAction(function(err, action) {
-    currentAction = action;
-    currentActionDate = new Date(currentAction.date).getTime();
-  });
+  function setupCurrentAction(error) {
+    persistingAction.getCurrentAction(availableActions, function(err, action) {
+      currentAction = action;
+      if (currentAction) {
+        currentActionDate = new Date(currentAction.date).getTime();
+      }
+    });
+  }
 
-  function subscriberAdded() {
-    if (!interval) {
-      interval = createLoop();
-    }
+  function addSubscriber(action) {
+    availableActions.push(action);
+    setupCurrentAction(null);
+    createLoop();
   }
 
   function createLoop() {
-    return setInterval(function() {
-      checkCachedAction();
-    }, process.env.interval ? process.env.interval : 1000);
+    if (!interval) {
+      interval = setInterval(function() {
+        checkCachedAction();
+      }, process.env.interval ? process.env.interval : 1000);
+    }
+  }
+
+  function stopLoop() {
+    clearInterval(interval);
+    interval = undefined;
   }
 
   function checkCachedAction() {
-    if (Date.now() > currentActionDate) {
-      process.send(currentAction.action)
+    if (currentAction && Date.now() > currentActionDate) {
+      process.send({ action: currentAction.action })
+      stopLoop();
     }
   }
 
   function createAction(actionData) {
-    persistingAction.createNewAction(actionData);
+    persistingAction.createNewAction(actionData, () => {
+      if (!currentAction) {
+        setupCurrentAction();
+      }
+    });
+  }
+
+  function removeAction() {
+    persistingAction.removeAction(currentAction._id, setupCurrentAction);
+    createLoop();
   }
 
   process.on('message', function(data) {
-    switch (data.action) {
+    switch (data.message) {
       case 'ADD_ACTION':
         createAction(data.actionData);
         break;
       case 'ADDED_SUBSCRIBER':
-        subscriberAdded();
+        addSubscriber(data.action);
+        break;
+      case 'COMPLETE_ACTION':
+        removeAction();
         break;
       default:
         // report error
