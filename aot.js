@@ -58,9 +58,28 @@ const memoryCache = require('memory-cache');
     });
   }
 
-  function removeAction() {
-    persistingAction.removeAction(currentAction._id, setupCurrentAction);
+  function removeCompletedAction() {
+    persistingAction.removeActionById(currentAction._id, setupCurrentAction);
     createLoop();
+  }
+
+  function removeAction(actionData) {
+    if (currentAction && actionData.appId === currentAction.appId) {
+      stopLoop();
+    }
+    persistingAction.removeAction(actionData.appId, actionData.action, () => {
+      setupCurrentAction();
+    });
+  }
+
+  function updateAction(actionData) {
+    persistingAction.updateAction(
+      actionData.appId,
+      actionData.action,
+      actionData.data,
+      () => {
+        setupCurrentAction();
+      });
   }
 
   process.on('message', function(data) {
@@ -72,7 +91,13 @@ const memoryCache = require('memory-cache');
         addSubscriber(data.action);
         break;
       case 'COMPLETE_ACTION':
-        removeAction();
+        removeCompletedAction();
+        break;
+      case 'UPDATE_ACTION':
+        updateAction(data.actionData);
+        break;
+      case 'REMOVE_ACTION':
+        removeAction(data.actionData);
         break;
       default:
         // report error
