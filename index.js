@@ -39,7 +39,9 @@ class ActionsOverTime {
     // Todo - support multiple callbacks
     AOTStore[this.options.key]['subscribers'][actionEvent.action][0](
       this.completeActionCallback.bind(this, actionEvent),
-      this.rejectActionCallback.bind(this));
+      this.rejectActionCallback.bind(this),
+      actionEvent.actionState
+    );
   }
 
   createLoopFork() {
@@ -60,8 +62,12 @@ class ActionsOverTime {
     this.aotApp.send({ message: 'ADDED_SUBSCRIBER', action: actionName });
   }
 
-  createAction(actionName, date) {
-    this.aotApp.send({ message: 'ADD_ACTION', actionData: { action: actionName, date: date }});
+  createAction(actionName, date, state) {
+    this.aotApp.send({ message: 'ADD_ACTION', actionData: {
+      action: actionName,
+      date: date,
+      actionState: state
+    }});
   }
 }
 

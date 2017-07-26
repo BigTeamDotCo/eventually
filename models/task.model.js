@@ -7,6 +7,7 @@ const actionSchema = new Schema({
   date: Date,
   deadline: Date,
   action: String,
+  actionState: Schema.Types.Mixed,
   priority: {
     type: String,
     enum: PRIORITY

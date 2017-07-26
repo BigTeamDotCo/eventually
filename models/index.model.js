@@ -38,6 +38,7 @@ class ConnectorMongoose {
     (new this.Action({
       date: actionData.date,
       action: actionData.action,
+      actionState: actionData.actionState,
       priority: 'Medium'
     })).save(cb);
   }
