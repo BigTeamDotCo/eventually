@@ -1,6 +1,6 @@
 {
   "name": "@bigteam/node-aot",
-  "version": "0.0.0-alpha.1",
+  "version": "0.0.0-alpha.2",
   "description": "Node action over time lib.",
   "main": "index.js",
   "scripts": {
