@@ -6,7 +6,8 @@
   "scripts": {
     "test": "node test.js"
   },
-  "author": "",
+  "author": "BigTeam.co",
+  "contributors": ["Dewald Laubscher"],
   "license": "MIT",
   "dependencies": {
     "memory-cache": "^0.2.0",
