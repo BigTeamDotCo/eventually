@@ -45,7 +45,7 @@ const memoryCache = require('memory-cache');
 
   function checkCachedAction() {
     if (currentAction && Date.now() > currentActionDate) {
-      process.send({ action: currentAction.action })
+      process.send({ action: currentAction.action, actionState: currentAction.actionState })
       stopLoop();
     }
   }
