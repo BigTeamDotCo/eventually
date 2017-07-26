@@ -4,6 +4,7 @@ const actionError = require('./action-error.model').actionError;
 const PRIORITY = require('../enums/priority.enum').PRIORITY;
 
 const actionSchema = new Schema({
+  appId: Schema.Types.ObjectId,
   date: Date,
   deadline: Date,
   action: String,

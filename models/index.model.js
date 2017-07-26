@@ -36,6 +36,7 @@ class ConnectorMongoose {
 
   createNewAction(actionData, cb) {
     (new this.Action({
+      appId: actionData.appId,
       date: actionData.date,
       action: actionData.action,
       actionState: actionData.actionState,
@@ -43,13 +44,35 @@ class ConnectorMongoose {
     })).save(cb);
   }
 
-  removeAction(actionId, cb) {
+  removeActionById(actionId, cb) {
     this.Action.remove({
       _id: actionId
     }, function (err, action) {
       console.log('delete ' + new Date());
       cb(err);
     });
+  }
+
+  removeAction(appId, action, cb) {
+    this.Action.remove({
+      appId: appId,
+      action: action
+    }, function (err) {
+      console.log('remove action ' + action);
+      if (cb) {
+        cb();
+      }
+    });
+  }
+
+  updateAction(appId, actionName, data, cb) {
+    this.Action.update({
+      appId: appId,
+      action: actionName
+    }, { $set: { actionState: data } }).exec(
+      (error, action) => {
+        cb(error);
+      });
   }
 }
 

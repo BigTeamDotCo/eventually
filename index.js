@@ -12,6 +12,8 @@ class ActionsOverTime {
       const self = new ActionsOverTime(options);
       AOTStore[options.key] = { actions: {
         addAction: self.createAction.bind(self),
+        removeAction: self.removeAction.bind(self),
+        updateAction: self.updateAction.bind(self),
         addSubscriber: self.addSubscriber.bind(self)
       }};
       return AOTStore[options.key].actions;
@@ -62,8 +64,23 @@ class ActionsOverTime {
     this.aotApp.send({ message: 'ADDED_SUBSCRIBER', action: actionName });
   }
 
-  createAction(actionName, date, state) {
+  removeAction(appId, action) {
+    this.aotApp.send({
+      message: 'REMOVE_ACTION',
+      actionData: { appId: appId, action: action }
+    });
+  }
+
+  updateAction(appId, action, data) {
+    this.aotApp.send({
+      message: 'UPDATE_ACTION',
+      actionData: { appId: appId, action: action, data: data }
+    });
+  }
+
+  createAction(appId, actionName, date, state) {
     this.aotApp.send({ message: 'ADD_ACTION', actionData: {
+      appId: appId,
       action: actionName,
       date: date,
       actionState: state
