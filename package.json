@@ -1,5 +1,5 @@
 {
-  "name": "node-aot",
+  "name": "@bigteam/node-aot",
   "version": "0.0.0-alpha.1",
   "description": "Node action over time lib.",
   "main": "index.js",
@@ -7,10 +7,27 @@
     "test": "node test.js"
   },
   "author": "BigTeam.co",
-  "contributors": ["Dewald Laubscher"],
+  "contributors": [
+    "Dewald Laubscher"
+  ],
   "license": "MIT",
   "dependencies": {
     "memory-cache": "0.2.0",
     "mongoose": "4.11.3"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BigTeamDotCo/node-aot.git"
+  },
+  "keywords": [
+    "NodeJs",
+    "Task",
+    "runner",
+    "Schedule"
+  ],
+  "bugs": {
+    "url": "https://github.com/BigTeamDotCo/node-aot/issues"
+  },
+  "homepage": "https://github.com/BigTeamDotCo/node-aot#readme"
 }
