@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const path = require('path');
 
 class ConnectorMongoose {
   constructor(options) {
@@ -14,8 +15,8 @@ class ConnectorMongoose {
   }
 
   _includeModels() {
-    require('./task.model');
-    require('./history.model');
+    require(path.resolve(global.nodeAotModuleDir + '/models/task.model'));
+    require(path.resolve(global.nodeAotModuleDir + '/models/history.model'));
   }
 
   _getModels() {

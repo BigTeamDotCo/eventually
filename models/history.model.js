@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const actionError = require('./action-error.model').actionError;
+const path = require('path');
+const actionError = require(path.resolve(global.nodeAotModuleDir + '/action-error.model')).actionError;
 
 const historySchema = new Schema({
   date: Date,
