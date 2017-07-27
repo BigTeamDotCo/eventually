@@ -1,5 +1,6 @@
 const childProcess = require('child_process');
 const AOTStore = {};
+global.nodeAotModuleDir = path.resolve(__dirname);
 
 class ActionsOverTime {
   static createActionOverTimeEmitter(options) {
@@ -47,7 +48,7 @@ class ActionsOverTime {
   }
 
   createLoopFork() {
-    this.aotApp = childProcess.fork(process.cwd() + '/aot', [], { env: this.options });
+    this.aotApp = childProcess.fork(global.nodeAotModuleDir + '/aot', [], { env: this.options });
     this.aotApp.on('message', this.handleResponse.bind(this));
   }
 
@@ -79,6 +80,8 @@ class ActionsOverTime {
   }
 
   createAction(appId, actionName, date, state) {
+    debugger;
+    console.log(this.aotApp.send);
     this.aotApp.send({ message: 'ADD_ACTION', actionData: {
       appId: appId,
       action: actionName,

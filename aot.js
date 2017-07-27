@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const ConnectorMongoose = require('./models/index.model.js').ConnectorMongoose;
+const path = require('path');
+const ConnectorMongoose = require(path.resolve(global.nodeAotModuleDir + '/models/index.model.js')).ConnectorMongoose;
 const memoryCache = require('memory-cache');
 
 (function () {

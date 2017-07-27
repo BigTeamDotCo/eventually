@@ -1,7 +1,10 @@
-const ActionsOverTime = require('./index').ActionsOverTime;
-const config = require('./test.config.js').config;
+const path = require('path');
+const ActionsOverTime = require(path.resolve(global.nodeAotModuleDir + '/index')).ActionsOverTime;
+const config = require(path.resolve(global.nodeAotModuleDir + '/test.config')).config;
+
 const ObjectId = (m = Math, d = Date, h = 16, s = s => m.floor(s).toString(h)) =>
     s(d.now() / 1000) + ' '.repeat(h).replace(/./g, () => s(m.random() * h));
+
 const actionsOverTime = ActionsOverTime.createActionOverTimeEmitter(config);
 
 let date = new Date();
