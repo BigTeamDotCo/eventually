@@ -15,8 +15,8 @@ class ConnectorMongoose {
   }
 
   _includeModels() {
-    require(path.resolve(global.nodeAotModuleDir + '/models/task.model'));
-    require(path.resolve(global.nodeAotModuleDir + '/models/history.model'));
+    require(path.resolve('./models/task.model'));
+    require(path.resolve('./models/history.model'));
   }
 
   _getModels() {
