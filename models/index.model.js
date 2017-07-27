@@ -15,8 +15,8 @@ class ConnectorMongoose {
   }
 
   _includeModels() {
-    require(path.resolve('./models/task.model'));
-    require(path.resolve('./models/history.model'));
+    require(path.resolve(`${__dirname}/task.model`));
+    require(path.resolve(`${__dirname}/history.model`));
   }
 
   _getModels() {

@@ -48,7 +48,7 @@ class ActionsOverTime {
   }
 
   createLoopFork() {
-    this.aotApp = childProcess.fork(path.resolve('./aot'), [], { env: this.options });
+    this.aotApp = childProcess.fork(path.resolve(`${__dirname}/aot`), [], { env: this.options });
     this.aotApp.on('message', this.handleResponse.bind(this));
   }
 

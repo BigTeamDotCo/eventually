@@ -4,7 +4,7 @@
   "description": "Node action over time lib.",
   "main": "index.js",
   "scripts": {
-    "publish": "npm publish --access public",
+    "publish:npm": "npm publish --access public",
     "test": "node test.js"
   },
   "author": "BigTeam.co",

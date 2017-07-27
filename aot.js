@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const path = require('path');
-const ConnectorMongoose = require(path.resolve('./models/index.model.js')).ConnectorMongoose;
+const ConnectorMongoose = require(path.resolve(`${__dirname}/models/index.model.js`)).ConnectorMongoose;
 const memoryCache = require('memory-cache');
 
 (function () {

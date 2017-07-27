@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const path = require('path');
-const actionError = require(path.resolve('./models/action-error.model')).actionError;
+const actionError = require(path.resolve(`${__dirname}/action-error.model`)).actionError;
 
 const historySchema = new Schema({
   date: Date,
