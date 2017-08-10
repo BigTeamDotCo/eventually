@@ -53,9 +53,7 @@ const memoryCache = require('memory-cache');
 
   function createAction(actionData) {
     persistingAction.createNewAction(actionData, () => {
-      if (!currentAction) {
-        setupCurrentAction();
-      }
+      setupCurrentAction();
     });
   }
 

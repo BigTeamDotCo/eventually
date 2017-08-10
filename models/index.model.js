@@ -1,17 +1,55 @@
 const mongoose = require('mongoose');
 const path = require('path');
+mongoose.Promise = global.Promise;
 
 class ConnectorMongoose {
   constructor(options) {
-    const host = options.host ? options.host : '127.0.0.1';
-    const port = options.port ? options.port : '27017';
-    const dbName = options.dbName ? options.dbName : 'node-aot';
-    const credentials = options.user
+    this.options = options;
+    this.host = options.host ? options.host : '127.0.0.1';
+    this.port = options.port ? options.port : '27017';
+    this.dbName = options.dbName ? options.dbName : 'node-aot';
+    this.credentials = options.user
       ? `${options.user}${options.password ? ':' + options.password : '' }@`
       : '';
-    mongoose.connect(`mongodb://${credentials}${host}:${port}/${dbName}`, { useMongoClient: true });
+    this.debug = typeof options.debug !== 'undefined' ? options.debug : false;
+    this.db = null;
+    this._setupMongooseConnections();
     this._includeModels();
     this._getModels();
+  }
+
+  _openConnection(uri) {
+    return mongoose.connect(uri, {
+      useMongoClient: true,
+      socketTimeoutMS: 1000,
+      connectTimeoutMS: 1000
+    });
+  }
+
+  _setupMongooseConnections() {
+    this.db = this._openConnection(`mongodb://${this.credentials}${this.host}:${this.port}/${this.dbName}`);
+    this.db.once('open', this._mongooseOpened.bind(this));
+    this.db.on('disconnected', this._mongooseDisconnected.bind(this));
+    this.db.on('error', this._mongooseError.bind(this));
+  }
+
+  _mongooseError(error) {
+    console.log('Mongoose threw an error', error);
+    this.db = this._openConnection(`mongodb://${this.credentials}${this.host}:${this.port}/${this.dbName}`);
+  }
+
+  _mongooseOpened(error) {
+    if (error) {
+      console.error('Could not connect to MongoDB!', error);
+    } else {
+      mongoose.set('debug', this.debug);
+    }
+  }
+
+  _mongooseDisconnected() {
+     console.log('Mongo disconnected.')
+     mongoose.set('debug', null);
+     this.db = this._openConnection(`mongodb://${this.credentials}${this.host}:${this.port}/${this.dbName}`);
   }
 
   _includeModels() {
