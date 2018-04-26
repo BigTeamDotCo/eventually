@@ -1,5 +1,5 @@
 {
-  "name": "@bigteam/node-aot",
+  "name": "@bigteam/eventually",
   "version": "0.0.0-alpha.7",
   "description": "Node action over time lib.",
   "main": "index.js",
@@ -19,7 +19,7 @@
   "devDependencies": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BigTeamDotCo/node-aot.git"
+    "url": "git+https://github.com/BigTeamDotCo/eventually.git"
   },
   "keywords": [
     "NodeJs",
@@ -28,7 +28,7 @@
     "Schedule"
   ],
   "bugs": {
-    "url": "https://github.com/BigTeamDotCo/node-aot/issues"
+    "url": "https://github.com/BigTeamDotCo/eventually/issues"
   },
-  "homepage": "https://github.com/BigTeamDotCo/node-aot#readme"
+  "homepage": "https://github.com/BigTeamDotCo/eventually#readme"
 }

@@ -57,7 +57,7 @@ class ActionsOverTime {
       AOTStore[this.options.key]['subscribers'] = {};
     }
     if (AOTStore[this.options.key]['subscribers'][actionName]) {
-      console.warn('node-aot currently only support single subscribers');
+      console.warn('eventually currently only support single subscribers');
       AOTStore[this.options.key]['subscribers'][actionName].push(callback);
     } else {
       AOTStore[this.options.key]['subscribers'][actionName] = [callback];

@@ -7,7 +7,7 @@ class ConnectorMongoose {
     this.options = options;
     this.host = options.host ? options.host : '127.0.0.1';
     this.port = options.port ? options.port : '27017';
-    this.dbName = options.dbName ? options.dbName : 'node-aot';
+    this.dbName = options.dbName ? options.dbName : 'eventually';
     this.credentials = options.user
       ? `${options.user}${options.password ? ':' + options.password : '' }@`
       : '';
