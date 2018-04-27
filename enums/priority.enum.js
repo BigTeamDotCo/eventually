@@ -4,4 +4,9 @@ const PRIORITY = [
   'High'
 ];
 
-exports.PRIORITY = PRIORITY;
+module.exports = {
+  PRIORITY: PRIORITY,
+  LOW: 'Low',
+  MEDIUM: 'Medium',
+  HIGH: 'High'
+};

@@ -5,6 +5,6 @@ const actionError = new Schema({
   message: String
 });
 
-const ActionError = mongoose.model('ActionError', actionError);
+const ActionError = mongoose.model('ActionError', actionError, { timestamps: true });
 
-exports.actionError = actionError;
+module.exports = actionError;

@@ -1,11 +1,8 @@
 const path = require('path');
 const ActionsOverTime = require(path.resolve('./index')).ActionsOverTime;
 const config = require(path.resolve('./test.config')).config;
-
-const ObjectId = (m = Math, d = Date, h = 16, s = s => m.floor(s).toString(h)) =>
-    s(d.now() / 1000) + ' '.repeat(h).replace(/./g, () => s(m.random() * h));
-
 const actionsOverTime = ActionsOverTime.createActionOverTimeEmitter(config);
+const ObjectId = require('../utilities/Mongo.ObjectId');
 
 let date = new Date();
 let date2 = new Date();
@@ -43,3 +40,11 @@ setTimeout(() => {
   actionsOverTime.removeAction(rememberDate1, 'testing');
   actionsOverTime.updateAction(rememberDate2, 'testing', { data: 'data + 20, updated' });
 }, 500);
+
+
+describe('Eventually CRUD', () => {
+  xit('should be able to add actions');
+  xit('should be able to remove actions');
+  xit('should be able to update actions');
+  xit('should be able to list actions');
+});

@@ -6,6 +6,7 @@ const memoryCache = require('memory-cache');
 (function () {
   let interval = undefined;
   const persistingAction = new ConnectorMongoose({
+    moduleRoot: __dirname,
     host: process.env.host,
     port: process.env.port,
     user: process.env.user,

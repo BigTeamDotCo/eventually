@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
 const path = require('path');
 const Schema = mongoose.Schema;
-const actionError = require(path.resolve(`${__dirname}/action-error.model`)).actionError;
-const PRIORITY = require(path.resolve(`${__dirname}/../enums/priority.enum`)).PRIORITY;
+const PRIORITY = require(path.resolve(`${__dirname}/../../enums/priority.enum`)).PRIORITY;
 
 const actionSchema = new Schema({
   appId: Schema.Types.ObjectId,
@@ -14,7 +13,10 @@ const actionSchema = new Schema({
     type: String,
     enum: PRIORITY
   },
-  errorList: [ actionError ]
+  errorList: [{
+    type: ObjectId,
+    ref: 'ActionError'
+  }]
 });
 
 const Action = mongoose.model('Action', actionSchema);

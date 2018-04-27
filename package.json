@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "publish:npm": "npm publish --access public",
-    "test": "node test.js"
+    "test": "mocha"
   },
   "author": "BigTeam.co",
   "contributors": [
@@ -16,7 +16,10 @@
     "memory-cache": "0.2.0",
     "mongoose": "4.11.3"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "mocha": "^5.1.1",
+    "should": "^13.2.1"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/BigTeamDotCo/eventually.git"
