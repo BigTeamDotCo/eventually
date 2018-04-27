@@ -47,6 +47,7 @@ module.exports = class ActionModel {
 
   toJSON() {
     return {
+      id: this.id,
       action: this.action,
       actionState: this.actionState,
       priority: this.priority,
