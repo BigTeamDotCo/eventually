@@ -22,9 +22,6 @@ module.exports = class ActionModel {
   get date() { return this.data.date; }
   set date(value) { this.data.date = value; }
 
-  get deadline() { return this.data.deadline; }
-  set deadline(value) { this.data.deadline = value; }
-
   get action() { return this.data.action; }
   set action(value) { this.data.action = value; }
 

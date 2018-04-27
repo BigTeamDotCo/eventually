@@ -3,6 +3,7 @@ const fs = require('fs');
 const mkPathFromRoot = require('../utilities/mkPathFromRoot');
 const enums = require('../enums/priority.enum');
 const Action = require('./LocalStorageModels/Action.Model')
+const _S_ = path.sep;
 
 module.exports = class LocalStorage {
   /**
@@ -17,21 +18,32 @@ module.exports = class LocalStorage {
   get localStoragePath() { return this._localStoragePath; }
   set localStoragePath(value) { this._localStoragePath = value; }
 
+  /**
+   * __d__ - date
+   * __ai__ - external app id
+   * __ac__ - action name
+   */
+  get fileParseRegExp() { return this._fileParseRegExp; }
+  set fileParseRegExp(value) { this._fileParseRegExp = value; }
+
   getCurrentAction(availableActions) {
     return new Promise((resolve, reject) => {
       try {
-        const s = path.sep;
-        const fileNameList = fs.readdirSync(`${this.localStoragePath}${s}${enums.HIGH}`)
-          .map(fileName => this._parseFilename(fileName));
+        resolve(this._getHighestPriorityItem());
       } catch (e) {
-        cb(e);
+        reject(e);
       }
     });
   }
 
   createNewAction(actionData) {
     return new Promise((resolve, reject) => {
-
+      const fileName = this._createFilename(actionData);
+      fs.createWriteStream(`${this.localStoragePath}${_S_}${enums.HIGH}${_S_}${fileName}`)
+        .write(JSON.stringify(actionData))
+        .on('finish', () => {
+          resolve();
+        });
     });
   }
 
@@ -56,7 +68,7 @@ module.exports = class LocalStorage {
   }
 
   /**
-   * Updates the
+   * Updates the action by Id and action name
    * @param String appId
    * @param String actionName
    * @param {*} data
@@ -66,11 +78,49 @@ module.exports = class LocalStorage {
   }
 
   constructor(options) {
-    mkPathFromRoot(options.moduleRoot, `.localStorage${path.sep}${enums.LOW}`);
-    mkPathFromRoot(options.moduleRoot, `.localStorage${path.sep}${enums.MEDIUM}`);
-    mkPathFromRoot(options.moduleRoot, `.localStorage${path.sep}${enums.HIGH}`);
-    this.localStoragePath = path.resolve(`${options.moduleRoot}${path.sep}.localStorage`);
-    this.fileParseRegExp = new RegExp('__d__(.*)(?=__ai__)__ai__(.*)(?=__dd__)__dd__(.*)(?=__ac__)__ac__(.*)$');
+    mkPathFromRoot(options.moduleRoot, `.localStorage${_S_}${enums.LOW}`);
+    mkPathFromRoot(options.moduleRoot, `.localStorage${_S_}${enums.MEDIUM}`);
+    mkPathFromRoot(options.moduleRoot, `.localStorage${_S_}${enums.HIGH}`);
+    this.localStoragePath = path.resolve(`${options.moduleRoot}${_S_}.localStorage`);
+    this.fileParseRegExp = new RegExp('__d__(.*)(?=__ai__)__ai__(.*)(?=__ac__)__ac__(.*)$');
+  }
+
+  /**
+   * reads dir and parse file name
+   */
+  _getFileList(priority) {
+    return fs.readdirSync(this.localStoragePath + _S_ + priority)
+      .map(fileName => this._parseFilename(fileName));
+  }
+
+  /**
+   * Get highest priority next item
+   */
+  _getNextItemInList([fileName, ...listFileName]) {
+    return listFileName.reduce((fileData, check) => {
+      if (fileData.date > check.date) {
+        return fileData;
+      } else {
+        return check;
+      }
+    }, fileName);
+  }
+
+  /**
+   * Get highest priority next item
+   */
+  _getHighestPriorityItem() {
+    return [enums.HIGH, enums.MEDIUM, enums.LOW].map(priority => {
+      const listFileName = this._getFileList(priority);
+      if (listFileName.length > 0) {
+        return this._getNextItemInList(listFileName);
+      }
+      return undefined;
+    }).reduce((pre, curr) => {
+      if (typeof curr === undefined) return pre;
+      if (typeof pre === undefined) return curr;
+      return pre.date < curr.date ? pre : curr;
+    }, undefined);
   }
 
   /**
@@ -85,7 +135,7 @@ module.exports = class LocalStorage {
     if (!date && !appId && !deadline && !action) {
       throw new Error('Invalid action config provided');
     }
-    return `__d__${date}__ai__${appId}__dd__${deadline}__ac__${action}`;
+    return `__d__${date}__ai__${appId}__ac__${action}`;
   }
 
   /**
