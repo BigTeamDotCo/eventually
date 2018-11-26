@@ -1,21 +1,13 @@
 const mongoose = require('mongoose');
 const path = require('path');
+const EventEmitter = require('events');
 
 module.exports = class ConnectorMongoose {
   getCurrentAction(availableActions) {
-    return new Promise((resolve, reject) => {
-      this.Action
-      .find({
+    return this.awaitDatabase().then(() => {
+      return this.Action.find({
         action: { $in: availableActions }
-      })
-      .sort({ date: 'asc' })
-      .exec((err, actions) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(actions);
-        }
-      });
+      }).sort({ date: 'asc' });
     });
   }
 
@@ -27,13 +19,7 @@ module.exports = class ConnectorMongoose {
         action: actionData.action,
         actionState: actionData.actionState,
         priority: actionData.priority || 'Medium'
-      })).save((error, data) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve();
-        }
-      });
+      })).save();
     });
   }
 
@@ -51,33 +37,34 @@ module.exports = class ConnectorMongoose {
     });
   }
 
+  awaitDatabase() {
+    return new Promise((resolve) => {
+        if (this.databaseAvailable) {
+            resolve();
+        } else {
+            this.emitter.once('databaseAvailable', () => {
+                console.log('here 2');
+                resolve();
+            });
+        }
+    });
+  }
+
   removeAction(appId, action) {
-    return new Promise((resolve, reject) => {
-      this.Action.remove({
+    return this.awaitDatabase().then(() => {
+      return this.Action.remove({
         appId: appId,
         action: action
-      }, function (err) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
       });
     });
   }
 
   updateAction(appId, actionName, data) {
-    return new Promise((resolve, reject) => {
-      this.Action.update({
+    return this.awaitDatabase().then(() => {
+      return this.Action.update({
         appId: appId,
         action: actionName
-      }, { $set: { actionState: data } }).exec((error, action) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve();
-        }
-      });
+      }, { $set: { actionState: data } });
     });
   }
 
@@ -89,32 +76,50 @@ module.exports = class ConnectorMongoose {
     this.credentials = options.user
       ? `${options.user}${options.password ? ':' + options.password : '' }@`
       : '';
+    this.connectionString = options.connectionString
+        ? options.connectionString
+        : `mongodb://${this.credentials}${this.host}:${this.port}/${this.dbName}`;
     this.debug = typeof options.debug !== 'undefined' ? options.debug : false;
     this.db = null;
+    this.emitter = new EventEmitter();
+    this.emitter.once('databaseAvailable', () => {
+        this.databaseAvailable = true;
+        this._includeModels();
+        this._getModels();
+    });
     this._setupMongooseConnections();
-    this._includeModels();
-    this._getModels();
   }
 
   _openConnection(uri) {
     return mongoose.connect(uri, {
-      useMongoClient: true,
-      socketTimeoutMS: 1000,
-      connectTimeoutMS: 1000
+      user: this.options.user,
+      pass: this.options.pass,
+      dbName: this.dbName,
+      socketTimeoutMS: 10000,
+      connectTimeoutMS: 10000
     });
   }
 
   _setupMongooseConnections() {
     mongoose.Promise = global.Promise;
-    this.db = this._openConnection(`mongodb://${this.credentials}${this.host}:${this.port}/${this.dbName}`);
-    this.db.once('open', this._mongooseOpened.bind(this));
-    this.db.on('disconnected', this._mongooseDisconnected.bind(this));
-    this.db.on('error', this._mongooseError.bind(this));
+    this.db = this._openConnection(this.connectionString);
+    if (this.db.once) {
+        this.db.once('open', this._mongooseOpened.bind(this));
+        this.db.on('disconnected', this._mongooseDisconnected.bind(this));
+        this.db.on('error', this._mongooseError.bind(this));
+    } else {
+        this.db.then(what => {
+            this.emitter.emit('databaseAvailable');
+        }).catch(e => {
+            console.error(e);
+        });
+        console.log(mongoose.once)
+    }
   }
 
   _mongooseError(error) {
     console.log('Mongoose threw an error', error);
-    this.db = this._openConnection(`mongodb://${this.credentials}${this.host}:${this.port}/${this.dbName}`);
+    this.db = this._openConnection(this.connectionString);
   }
 
   _mongooseOpened(error) {
@@ -128,7 +133,7 @@ module.exports = class ConnectorMongoose {
   _mongooseDisconnected() {
      console.log('Mongo disconnected.')
      mongoose.set('debug', null);
-     this.db = this._openConnection(`mongodb://${this.credentials}${this.host}:${this.port}/${this.dbName}`);
+     this.db = this._openConnection(this.connectionString);
   }
 
   _includeModels() {

@@ -1,37 +1,37 @@
 {
-  "name": "@bigteam/eventually",
-  "version": "0.0.0-alpha.7",
-  "description": "Node action over time lib.",
-  "main": "index.js",
-  "scripts": {
-    "publish:npm": "npm publish --access public",
-    "test": "mocha"
-  },
-  "author": "BigTeam.co",
-  "contributors": [
-    "Dewald Laubscher"
-  ],
-  "license": "MIT",
-  "dependencies": {
-    "memory-cache": "0.2.0",
-    "mongoose": "4.11.3"
-  },
-  "devDependencies": {
-    "mocha": "^5.1.1",
-    "should": "^13.2.1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/BigTeamDotCo/eventually.git"
-  },
-  "keywords": [
-    "NodeJs",
-    "Task",
-    "runner",
-    "Schedule"
-  ],
-  "bugs": {
-    "url": "https://github.com/BigTeamDotCo/eventually/issues"
-  },
-  "homepage": "https://github.com/BigTeamDotCo/eventually#readme"
-}
+    "name": "@bigteam/node-aot",
+    "version": "0.0.0-alpha.8.d",
+    "description": "Node action over time lib.",
+    "main": "index.js",
+    "scripts": {
+      "publish:npm": "npm publish --access public",
+      "test": "mocha"
+    },
+    "author": "BigTeam.co",
+    "contributors": [
+      "Dewald Laubscher"
+    ],
+    "license": "MIT",
+    "dependencies": {
+      "memory-cache": "0.2.0",
+      "mongoose": "^5.0.10"
+    },
+    "devDependencies": {
+      "mocha": "^5.1.1",
+      "should": "^13.2.1"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/BigTeamDotCo/eventually.git"
+    },
+    "keywords": [
+      "NodeJs",
+      "Task",
+      "runner",
+      "Schedule"
+    ],
+    "bugs": {
+      "url": "https://github.com/BigTeamDotCo/eventually/issues"
+    },
+    "homepage": "https://github.com/BigTeamDotCo/eventually#readme"
+  }

@@ -1,15 +1,15 @@
-const mongoose = require('mongoose');
 const path = require('path');
-const ConnectorMongoose = require(path.resolve(`${__dirname}/models/index.model.js`)).ConnectorMongoose;
-const memoryCache = require('memory-cache');
+const ConnectorMongoose = require(path.resolve(`${__dirname}/Connectors/Mongoose.Storage`));
 
 (function () {
   let interval = undefined;
   const persistingAction = new ConnectorMongoose({
+    connectionString: process.env.connectionString,
     moduleRoot: __dirname,
     host: process.env.host,
     port: process.env.port,
     user: process.env.user,
+    pass: process.env.password,
     dbName: process.env.dbName
   });
   let currentAction;
@@ -104,4 +104,11 @@ const memoryCache = require('memory-cache');
         break;
     }
   });
+
+
+  const ROOT_FAIL_EVENT_NAME = 'uncaughtException';
+  process.on(ROOT_FAIL_EVENT_NAME, e => {
+    console.error(e);
+  });
+
 })();

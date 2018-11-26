@@ -80,8 +80,6 @@ class ActionsOverTime {
   }
 
   createAction(appId, actionName, date, state) {
-    debugger;
-    console.log(this.aotApp.send);
     this.aotApp.send({ message: 'ADD_ACTION', actionData: {
       appId: appId,
       action: actionName,

@@ -14,7 +14,7 @@ const actionSchema = new Schema({
     enum: PRIORITY
   },
   errorList: [{
-    type: ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'ActionError'
   }]
 });

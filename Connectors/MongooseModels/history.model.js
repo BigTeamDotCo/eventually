@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const path = require('path');
-const actionError = require(path.resolve(`${__dirname}/action-error.model`)).actionError;
 
 const historySchema = new Schema({
   date: Date,
@@ -9,7 +8,10 @@ const historySchema = new Schema({
   priority: {
     type: String
   },
-  errorList: [ actionError ]
+  errorList: [ {
+      type: Schema.Types.ObjectId,
+      ref: 'ActionError'
+  } ]
 });
 
 const History = mongoose.model('History', historySchema);
