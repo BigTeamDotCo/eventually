@@ -25,7 +25,7 @@ module.exports = class ConnectorMongoose {
 
   removeActionById(actionId) {
     return this.awaitDatabase().then(() => {
-        return this.Action.remove({
+        return this.Action.findOneAndRemove({
             _id: actionId
         });
     });
@@ -45,7 +45,7 @@ module.exports = class ConnectorMongoose {
 
   removeAction(appId, action) {
     return this.awaitDatabase().then(() => {
-      return this.Action.remove({
+      return this.Action.findOneAndRemove({
         appId: appId,
         action: action
       });

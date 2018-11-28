@@ -59,6 +59,9 @@ const ConnectorMongoose = require(path.resolve(`${__dirname}/Connectors/Mongoose
   function createAction(actionData) {
     persistingAction.createNewAction(actionData).then(() => {
       setupCurrentAction();
+    }).catch(e => {
+        console.info('create action function');
+        console.error(e);
     });
   }
 
@@ -66,6 +69,9 @@ const ConnectorMongoose = require(path.resolve(`${__dirname}/Connectors/Mongoose
     persistingAction.removeActionById(currentAction._id).then(() => {
         setupCurrentAction();
         createLoop();
+    }).catch(e => {
+        console.info('remove completed action function');
+        console.error(e);
     });
   }
 
@@ -76,6 +82,9 @@ const ConnectorMongoose = require(path.resolve(`${__dirname}/Connectors/Mongoose
     persistingAction.removeAction(actionData.appId, actionData.action).then(() => {
       setupCurrentAction();
       createLoop();
+    }).catch(e => {
+        console.info('remove action function');
+        console.error(e);
     });
   }
 
@@ -86,6 +95,9 @@ const ConnectorMongoose = require(path.resolve(`${__dirname}/Connectors/Mongoose
       actionData.data
     ).then(() => {
         setupCurrentAction();
+    }).catch(e => {
+        console.info('update action function');
+        console.error(e);
     });
   }
 
