@@ -24,6 +24,8 @@ const ConnectorMongoose = require(path.resolve(`${__dirname}/Connectors/Mongoose
           console.log(currentAction.date)
           currentActionDate = new Date(currentAction.date).getTime();
         }
+      } else {
+        currentAction = undefined;
       }
     });
   }
