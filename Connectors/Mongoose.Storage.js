@@ -12,8 +12,8 @@ module.exports = class ConnectorMongoose {
   }
 
   createNewAction(actionData) {
-    return new Promise((resolve, reject) => {
-      (new this.Action({
+    return this.awaitDatabase().then(() => {
+        return (new this.Action({
         appId: actionData.appId,
         date: actionData.date,
         action: actionData.action,
@@ -24,16 +24,10 @@ module.exports = class ConnectorMongoose {
   }
 
   removeActionById(actionId) {
-    return new Promise((resolve, reject) => {
-      this.Action.remove({
-        _id: actionId
-      }, function (err, action) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
-      });
+    return this.awaitDatabase().then(() => {
+        return this.Action.remove({
+            _id: actionId
+        });
     });
   }
 

@@ -55,22 +55,25 @@ const ConnectorMongoose = require(path.resolve(`${__dirname}/Connectors/Mongoose
   }
 
   function createAction(actionData) {
-    persistingAction.createNewAction(actionData, () => {
+    persistingAction.createNewAction(actionData).then(() => {
       setupCurrentAction();
     });
   }
 
   function removeCompletedAction() {
-    persistingAction.removeActionById(currentAction._id, setupCurrentAction);
-    createLoop();
+    persistingAction.removeActionById(currentAction._id).then(() => {
+        setupCurrentAction();
+        createLoop();
+    });
   }
 
   function removeAction(actionData) {
     if (currentAction && actionData.appId === currentAction.appId) {
       stopLoop();
     }
-    persistingAction.removeAction(actionData.appId, actionData.action, () => {
+    persistingAction.removeAction(actionData.appId, actionData.action).then(() => {
       setupCurrentAction();
+      createLoop();
     });
   }
 
@@ -78,10 +81,10 @@ const ConnectorMongoose = require(path.resolve(`${__dirname}/Connectors/Mongoose
     persistingAction.updateAction(
       actionData.appId,
       actionData.action,
-      actionData.data,
-      () => {
+      actionData.data
+    ).then(() => {
         setupCurrentAction();
-      });
+    });
   }
 
   process.on('message', function(data) {
