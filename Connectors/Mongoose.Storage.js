@@ -43,7 +43,6 @@ module.exports = class ConnectorMongoose {
             resolve();
         } else {
             this.emitter.once('databaseAvailable', () => {
-                console.log('here 2');
                 resolve();
             });
         }
@@ -82,6 +81,7 @@ module.exports = class ConnectorMongoose {
     this.debug = typeof options.debug !== 'undefined' ? options.debug : false;
     this.db = null;
     this.emitter = new EventEmitter();
+    this.awaitDatabase = this.awaitDatabase.bind(this);
     this.emitter.once('databaseAvailable', () => {
         this.databaseAvailable = true;
         this._includeModels();
@@ -113,7 +113,6 @@ module.exports = class ConnectorMongoose {
         }).catch(e => {
             console.error(e);
         });
-        console.log(mongoose.once)
     }
   }
 

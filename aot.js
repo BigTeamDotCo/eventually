@@ -17,11 +17,13 @@ const ConnectorMongoose = require(path.resolve(`${__dirname}/Connectors/Mongoose
   let availableActions = [];
 
   function setupCurrentAction(error) {
-    persistingAction.getCurrentAction(availableActions, function(err, action) {
-      currentAction = action;
-      if (currentAction) {
-        console.log(action.date)
-        currentActionDate = new Date(currentAction.date).getTime();
+    persistingAction.getCurrentAction(availableActions).then((actionList) => {
+      if (actionList.length > 0) {
+        currentAction = actionList[0];
+        if (currentAction) {
+          console.log(currentAction.date)
+          currentActionDate = new Date(currentAction.date).getTime();
+        }
       }
     });
   }
