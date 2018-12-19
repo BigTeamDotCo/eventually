@@ -46,7 +46,6 @@ A message history can be kept so that tasks can be replayed (hmmmmm, maybe not i
 
 ### What has already been done?
 
-- Caching of database requests: `memory-cache` on npm
 - creating, destroying and managing clusters: `cluster` on npm or nodejs clusters in docs
 - a loop that will do checks for next tasks `node-schedule`
 

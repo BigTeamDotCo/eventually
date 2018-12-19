@@ -4,6 +4,7 @@ const ConnectorMongoose = require(path.resolve(`${__dirname}/Connectors/Mongoose
 (function () {
   let interval = undefined;
   const persistingAction = new ConnectorMongoose({
+    test: process.env.test ? JSON.parse(process.env.test) : false,
     connectionString: process.env.connectionString,
     moduleRoot: __dirname,
     host: process.env.host,

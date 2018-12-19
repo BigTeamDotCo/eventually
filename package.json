@@ -1,6 +1,6 @@
 {
   "name": "@bigteam/node-aot",
-  "version": "0.0.0-alpha.8.i",
+  "version": "0.0.0-alpha.9.a",
   "description": "Node action over time lib.",
   "main": "index.js",
   "scripts": {
@@ -13,8 +13,8 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "memory-cache": "0.2.0",
-    "mongoose": "^5.0.10"
+    "mongodb-memory-server": "^2.8.0",
+    "mongoose": "^5.4.0"
   },
   "devDependencies": {
     "mocha": "^5.1.1",

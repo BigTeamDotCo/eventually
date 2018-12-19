@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const path = require('path');
 const EventEmitter = require('events');
+const MongoMemoryServer = require('mongodb-memory-server').MongoMemoryServer;
+
 
 module.exports = class ConnectorMongoose {
   getCurrentAction(availableActions) {
@@ -84,14 +86,28 @@ module.exports = class ConnectorMongoose {
     this._setupMongooseConnections();
   }
 
-  _openConnection(uri) {
+  _createMongooseConnection(uri) {
     return mongoose.connect(uri, {
-      user: this.options.user,
-      pass: this.options.pass,
-      dbName: this.dbName,
-      socketTimeoutMS: 10000,
-      connectTimeoutMS: 10000
+        user: this.options.user,
+        pass: this.options.pass,
+        dbName: this.dbName,
+        socketTimeoutMS: 10000,
+        connectTimeoutMS: 10000,
+        useCreateIndex: true,
+        useNewUrlParser: true
     });
+  }
+
+  _openConnection(uri) {
+    if (this.options.test) {
+        this.mongoServer1 = new MongoMemoryServer();
+        return this.mongoServer1.getConnectionString(this.dbName).then((testUri) => {
+            return this._createMongooseConnection(testUri);
+        });
+    } else {
+        console.log('Eventually');
+        return this._createMongooseConnection(uri);
+    }
   }
 
   _setupMongooseConnections() {
